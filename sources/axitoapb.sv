@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module axitoapb(
     input clk, //positive edge triggered clock
     input reset, //asynchronous reset
