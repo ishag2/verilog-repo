@@ -4,13 +4,13 @@ from cocotb.triggers import Timer
 async def generate_clock(dut):
     """Generate clock pulses."""
     for cycle in range(1000):
-        dut.clock.value = 0
+        dut.clk.value = 0
         await Timer(5, unit="ns")
-        dut.clock.value = 1
+        dut.clk.value = 1
         await Timer(5, unit="ns")
 
 @cocotb.test()
-async def test_encryption_1(dut):
+async def test_1(dut):
     await cocotb.start(generate_clock(dut))
     print("AXI Write Transaction")
     await Timer(5, unit="ns")  
@@ -40,7 +40,7 @@ async def test_encryption_1(dut):
     assert dut.paddr.value == 1, "APB address is not correct"   
     assert dut.pwdata.value == 10, "APB write data is not correct"  
      
-def test_axi_to_apb_runner():
+def test_axitoapbrunner():
     import os
     from pathlib import Path
     from cocotb_tools.runner import get_runner
@@ -60,4 +60,4 @@ def test_axi_to_apb_runner():
         always=True,
     )
     
-    runner.test(hdl_toplevel="axitoapb", test_module="test_axitoapb")
+    runner.test(hdl_toplevel="axitoapb", test_module="test_axitoapb_hidden")
