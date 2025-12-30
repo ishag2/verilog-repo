@@ -24,8 +24,6 @@ module axitoapb(
     output reg pwrite, //APB write signal
     output reg [3:0] pwdata, //APB write data
     output reg psel, //APB select signal
-    input pready //APB ready signal
-);
-
+    input pready); //APB ready signal
 
 endmodule
