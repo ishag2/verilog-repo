@@ -139,12 +139,12 @@ async def test_4(dut):
     await Timer(40, unit="ns")  
     dut.pready.value = 1
     dut.wvalid.value = 0
-    await Timer(40, unit="ns")  
-    dut.pready.value = 0
     dut._log.info("APB address = %d, pwdata = %d",
                   dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 1, "APB address is not correct"   
     assert dut.pwdata.value == 10, "APB write data is not correct" 
+    await Timer(40, unit="ns")  
+    dut.pready.value = 0
     await Timer(20, unit="ns")
     dut.awvalid.value = 1
     dut.awaddr.value = 2
@@ -158,12 +158,13 @@ async def test_4(dut):
     await Timer(40, unit="ns")  
     dut.pready.value = 1
     dut.wvalid.value = 0
-    await Timer(40, unit="ns")  
-    dut.pready.value = 0
     dut._log.info("APB address = %d, pwdata = %d",
                   dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 2, "APB address is not correct"   
     assert dut.pwdata.value == 20, "APB write data is not correct" 
+    await Timer(40, unit="ns")  
+    dut.pready.value = 0
+    
    
 def test_axitoapbrunner():
     import os
