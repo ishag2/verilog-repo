@@ -3,7 +3,7 @@ Code Completion task:
 Complete the given partial Verilog RTL code based on the specification /workdir/docs/Specification.md. 
 The RTL code should be synthesizable.
 
-Implement only the write functionality of the AXI to APB bridge described in the specification, that is, converting write AXI transactions to APB transactions.
+Implement only the write functionality of the AXI to APB bridge, including burst writes support,  as described in the specification, that is, converting write AXI transactions to APB transactions. Assume a maximum burst length of 5.
 
 Partial RTL code
 ```
@@ -20,6 +20,7 @@ module axitoapb(
     //AXI Write Data
     input [3:0] wdata, //AXI write data
     input wvalid, // AXI write valid signal
+    input wlast, //AXI last write signal
     output reg wready, //AXI write ready signal
 
     //AXI Write Resp
