@@ -76,6 +76,7 @@ module axitoapb(
     //FSM
     always @(*) begin
         count = count_q;
+        paddr = 0;
         case (curr_state) 
             IDLE: begin
                 //control signals
