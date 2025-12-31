@@ -152,11 +152,14 @@ module axitoapb(
             APB_WR: begin
                 psel = 1;
                 pwrite = 1;
+                paddr = addr_q + rev_count_q;
+                pwdata = data_q[rev_count_q];
                 if (pready) begin
-                    paddr = addr_q + rev_count_q - 1;
-                    pwdata = data_q[rev_count_q - 1];
+                    // paddr = addr_q + rev_count_q - 1;
+                    // pwdata = data_q[rev_count_q - 1];
                     rev_count = rev_count_q + 1;
-                    if ((rev_count_q + 1) > count_q)
+                    //if ((rev_count_q + 1) > count_q)
+                    if ((rev_count_q + 1) >= count_q)
                         next_state = IDLE;
                     else
                         next_state = APB_WR;
