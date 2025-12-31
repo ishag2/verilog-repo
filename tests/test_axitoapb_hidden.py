@@ -39,8 +39,8 @@ async def test_1(dut):
     dut.pready.value = 1
     # await Timer(40, unit="ns")  
     # dut.pready.value = 0
-    dut._log.info("APB address = %d, pwdata = %d",
-                  dut.paddr.value, dut.pwdata.value)
+    #dut._log.info("APB address = %d, pwdata = %d",
+    #             dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 1, "APB address is not correct"   
     assert dut.pwdata.value == 10, "APB write data is not correct" 
 
@@ -80,8 +80,8 @@ async def test_2(dut):
     dut.pready.value = 1
     # await Timer(40, unit="ns")  
     # dut.pready.value = 0
-    dut._log.info("APB address = %d, pwdata = %d",
-                  dut.paddr.value, dut.pwdata.value)
+    #dut._log.info("APB address = %d, pwdata = %d",
+     #             dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 1, "APB address is not correct"   
     assert dut.pwdata.value == 10, "APB write data is not correct"  
 
@@ -121,8 +121,8 @@ async def test_3(dut):
     dut.pready.value = 1
     # await Timer(40, unit="ns")  
     # dut.pready.value = 0
-    dut._log.info("APB address = %d, pwdata = %d",
-                  dut.paddr.value, dut.pwdata.value)
+    #dut._log.info("APB address = %d, pwdata = %d",
+     #             dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 1, "APB address is not correct"   
     assert dut.pwdata.value == 10, "APB write data is not correct"  
 
@@ -155,8 +155,8 @@ async def test_4(dut):
     dut.pready.value = 1
     dut.wvalid.value = 0
     dut.wlast.value = 0
-    dut._log.info("APB address = %d, pwdata = %d",
-                  dut.paddr.value, dut.pwdata.value)
+    #dut._log.info("APB address = %d, pwdata = %d",
+     #             dut.paddr.value, dut.pwdata.value)
     await Timer(40, unit="ns")  
     dut.pready.value = 0
     assert dut.paddr.value == 1, "APB address is not correct"   
@@ -176,8 +176,8 @@ async def test_4(dut):
     dut.pready.value = 1
     dut.wvalid.value = 0
     dut.wlast.value = 0
-    dut._log.info("APB address = %d, pwdata = %d",
-                  dut.paddr.value, dut.pwdata.value)
+    #dut._log.info("APB address = %d, pwdata = %d",
+     #             dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 2, "APB address is not correct"   
     assert dut.pwdata.value == 20, "APB write data is not correct" 
     await Timer(40, unit="ns")  
@@ -220,8 +220,8 @@ async def test_5(dut):
     dut.pready.value = 1
     # await Timer(40, unit="ns")  
     # dut.pready.value = 0
-    dut._log.info("APB address = %d, pwdata = %d",
-                  dut.paddr.value, dut.pwdata.value)
+    #dut._log.info("APB address = %d, pwdata = %d",
+     #             dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 1, "APB address is not correct"   
     assert dut.pwdata.value == 10, "APB write data is not correct"
     await Timer(10, unit="ns")
