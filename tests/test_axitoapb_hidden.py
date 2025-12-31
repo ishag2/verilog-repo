@@ -206,7 +206,8 @@ async def test_5(dut):
     dut.wvalid.value = 1
     dut.wlast.value = 0
     dut.wdata.value = 10
-    await Timer(10, unit="ns")  
+    await Timer(10, unit="ns") 
+    dut.wvalid.value = 0 
     dut.wlast.value = 0
     await Timer(10, unit="ns") 
     dut.wvalid.value = 1
