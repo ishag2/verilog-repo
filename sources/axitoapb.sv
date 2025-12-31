@@ -12,6 +12,7 @@ module axitoapb(
     //AXI Write Data
     input [3:0] wdata, //AXI write data
     input wvalid, //AXI write valid signal
+    input wlast, //AXI last write signal
     output reg wready, //AXI write ready signal
 
     //AXI Write Resp
@@ -24,6 +25,8 @@ module axitoapb(
     output reg pwrite, //APB write signal
     output reg [3:0] pwdata, //APB write data
     output reg psel, //APB select signal
-    input pready); //APB ready signal
+    input pready //APB ready signal
+);
+
 
 endmodule
