@@ -76,7 +76,13 @@ module axitoapb(
     //FSM
     always @(*) begin
         count = count_q;
+        rev_count = rev_count_q;
+
         paddr = 0;
+        pwdata = 0;
+        pwrite = 0;
+        psel = 0;
+        
         case (curr_state) 
             IDLE: begin
                 //control signals
@@ -144,12 +150,13 @@ module axitoapb(
             end
 
             APB_WR: begin
+                psel = 1;
+                pwrite = 1;
                 if (pready) begin
-                    rev_count = rev_count_q + 1;
                     paddr = addr_q + rev_count_q - 1;
                     pwdata = data_q[rev_count_q - 1];
-                    psel = 1;
-                    if ((count_q - rev_count_q) == 0) 
+                    rev_count = rev_count_q + 1;
+                    if ((rev_count_q + 1) > count_q)
                         next_state = IDLE;
                     else
                         next_state = APB_WR;
