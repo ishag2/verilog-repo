@@ -23,7 +23,7 @@ AXI interconnect has 5 channels as follows:
 
 AXI protocol has separate data and address phases. For a transaction between an AXI initiator and target, the initiator sends address information first, setting address valid signal HIGH. When the target is ready to accept the address information, it sets the address ready signal HIGH. 
 
-In case of a write transaction, the initiator sends the data to the target in the next phase following the same VALID and READY handshaking. The target then sends a response to the initiator confirming if the data is OKAY. AXI supports burst write transactions. In a burst write transaction, the initiator sends one address request and then moves multiple data beats back-to-back under that single request. This is managed in AXI protocol using wlast signal; after the address is set by the initiator, during write phase, AXI protocol uses wlast signal to check for the last write of the given transaction.
+In case of a write transaction, the initiator sends the data to the target in the next phase following the same VALID and READY handshaking. The target then sends a response to the initiator confirming if the data is OKAY. AXI supports burst write transactions. In a burst write transaction, the initiator writes multiple data beats to a sequence of consecutive addresses using one address phase and a stream of write-data beats. For each valid write beat in a burst transaction, initiator sets wvalid to HIGH. On the last beat of a burst transaction, initiator sets wlast to HIGH.
 
 In case of a read transaction, the address exchange is followed by the target sending the requested data.
 
@@ -44,7 +44,7 @@ AXI to APB bridge converts AXI transactions, sent by an AXI initiator, to APB tr
 1. Read and Write Addresses from AXI are sent on the Address APB channel as it is common for both read and write transactions in APB.
 2. Bridge needs to wait for write address and data phases on AXI to complete before sending write address and data on APB as AXI has separate data and address phases whereas APB only has one.
 3. Bridge needs to create a response for confirming the validity of the write data as APB protocol does not support that feature. 
-4. AXI supports burst write transactions but APB does not. Hence, AXI burst transactions will need to be converted to individual APB write transactions, incrementing the address by one for writes subsequent to the first one for a given AXI burst transaction.
+4. AXI supports burst write transactions but APB does not. Hence, AXI burst transactions will need to be converted to individual APB write transactions. The first APB transaction in this case will use the address sent by AXI. For the following transactions, APB will need to increment the address by one each time.
 
 
 
