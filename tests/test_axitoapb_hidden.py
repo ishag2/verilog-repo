@@ -1,3 +1,4 @@
+
 import cocotb
 from cocotb.triggers import Timer
 
@@ -11,12 +12,14 @@ async def generate_clock(dut):
 
 @cocotb.test()
 async def test_1(dut):
+    """Test basic write transaction."""
     await cocotb.start(generate_clock(dut))
     print("AXI Write Transaction")
     await Timer(5, unit="ns")  
     dut.reset.value = 1
     dut.awvalid.value = 0
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     dut.bready.value = 0
     dut.pready.value = 0
     await Timer(15, unit="ns")
@@ -28,6 +31,7 @@ async def test_1(dut):
     dut.awvalid.value = 0
     await Timer(10, unit="ns")  
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     dut.wdata.value = 10
     await Timer(20, unit="ns")  
     dut.bready.value = 1
@@ -38,7 +42,7 @@ async def test_1(dut):
     dut._log.info("APB address = %d, pwdata = %d",
                   dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 1, "APB address is not correct"   
-    assert dut.pwdata.value == 10, "APB write data is not correct"  
+    assert dut.pwdata.value == 10, "APB write data is not correct" 
 
 @cocotb.test()
 async def test_2(dut):
@@ -49,6 +53,7 @@ async def test_2(dut):
     dut.reset.value = 1
     dut.awvalid.value = 0
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     dut.bready.value = 0
     dut.pready.value = 0
     await Timer(15, unit="ns")
@@ -57,13 +62,17 @@ async def test_2(dut):
     dut.awvalid.value = 1
     dut.awaddr.value = 1
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     await Timer(10, unit="ns")
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     await Timer(10, unit="ns")  
     dut.awvalid.value = 0
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     await Timer(10, unit="ns")  
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     dut.wdata.value = 10
     await Timer(20, unit="ns")  
     dut.bready.value = 1
@@ -85,6 +94,7 @@ async def test_3(dut):
     dut.reset.value = 1
     dut.awvalid.value = 0
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     dut.bready.value = 0
     dut.pready.value = 0
     await Timer(15, unit="ns")
@@ -96,11 +106,14 @@ async def test_3(dut):
     dut.awaddr.value = 1
     await Timer(10, unit="ns")
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     await Timer(10, unit="ns")  
     dut.awvalid.value = 0
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     await Timer(10, unit="ns")  
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     dut.wdata.value = 10
     await Timer(20, unit="ns")  
     dut.bready.value = 1
@@ -122,6 +135,7 @@ async def test_4(dut):
     dut.reset.value = 1
     dut.awvalid.value = 0
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     dut.bready.value = 0
     dut.pready.value = 0
     await Timer(15, unit="ns")
@@ -133,18 +147,20 @@ async def test_4(dut):
     dut.awvalid.value = 0
     await Timer(10, unit="ns")  
     dut.wvalid.value = 1
+    dut.wlast.value = 1
     dut.wdata.value = 10
     await Timer(20, unit="ns")  
     dut.bready.value = 1
     await Timer(40, unit="ns")  
     dut.pready.value = 1
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     dut._log.info("APB address = %d, pwdata = %d",
                   dut.paddr.value, dut.pwdata.value)
-    assert dut.paddr.value == 1, "APB address is not correct"   
-    assert dut.pwdata.value == 10, "APB write data is not correct" 
     await Timer(40, unit="ns")  
     dut.pready.value = 0
+    assert dut.paddr.value == 1, "APB address is not correct"   
+    assert dut.pwdata.value == 10, "APB write data is not correct" 
     await Timer(20, unit="ns")
     dut.awvalid.value = 1
     dut.awaddr.value = 2
@@ -152,19 +168,67 @@ async def test_4(dut):
     dut.awvalid.value = 0
     await Timer(10, unit="ns")  
     dut.wvalid.value = 1
-    dut.wdata.value = 5
+    dut.wlast.value = 1
+    dut.wdata.value = 20
     await Timer(20, unit="ns")  
     dut.bready.value = 1
     await Timer(40, unit="ns")  
     dut.pready.value = 1
     dut.wvalid.value = 0
+    dut.wlast.value = 0
     dut._log.info("APB address = %d, pwdata = %d",
                   dut.paddr.value, dut.pwdata.value)
     assert dut.paddr.value == 2, "APB address is not correct"   
-    assert dut.pwdata.value == 5, "APB write data is not correct" 
+    assert dut.pwdata.value == 20, "APB write data is not correct" 
     await Timer(40, unit="ns")  
     dut.pready.value = 0
     
+@cocotb.test()
+async def test_5(dut):
+    """Test burst write transaction."""
+    await cocotb.start(generate_clock(dut))
+    print("AXI Write Transaction")
+    await Timer(5, unit="ns")  
+    dut.reset.value = 1
+    dut.awvalid.value = 0
+    dut.wvalid.value = 0
+    dut.wlast.value = 0
+    dut.bready.value = 0
+    dut.pready.value = 0
+    await Timer(15, unit="ns")
+    dut.reset.value = 0
+    await Timer(20, unit="ns")
+    dut.awvalid.value = 1
+    dut.awaddr.value = 1
+    await Timer(20, unit="ns")  
+    dut.awvalid.value = 0
+    await Timer(10, unit="ns")  
+    dut.wvalid.value = 1
+    dut.wlast.value = 0
+    dut.wdata.value = 10
+    await Timer(10, unit="ns")  
+    dut.wlast.value = 0
+    await Timer(10, unit="ns") 
+    dut.wvalid.value = 1
+    dut.wlast.value = 1
+    dut.wdata.value = 9
+    await Timer(10, unit="ns") 
+    dut.wvalid.value = 0
+    await Timer(20, unit="ns")  
+    dut.bready.value = 1
+    await Timer(40, unit="ns")  
+    dut.pready.value = 1
+    # await Timer(40, unit="ns")  
+    # dut.pready.value = 0
+    dut._log.info("APB address = %d, pwdata = %d",
+                  dut.paddr.value, dut.pwdata.value)
+    assert dut.paddr.value == 1, "APB address is not correct"   
+    assert dut.pwdata.value == 10, "APB write data is not correct"
+    await Timer(10, unit="ns")
+    dut._log.info("APB address = %d, pwdata = %d",
+                  dut.paddr.value, dut.pwdata.value)
+    assert dut.paddr.value == 2, "APB address is not correct"   
+    assert dut.pwdata.value == 9, "APB write data is not correct"
    
 def test_axitoapbrunner():
     import os
