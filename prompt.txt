@@ -1,45 +1,53 @@
 Code Completion task:
 
-Complete the given partial Verilog RTL code based on the specification /workdir/docs/Specification.md. 
-The RTL code should be synthesizable.
+Complete the partial Verilog RTL code to implement an AXI to APB bridge for write transactions.
 
-Implement only the write functionality of the AXI to APB bridge, including burst writes support,  as described in the specification, that is, converting write AXI transactions to APB transactions. Assume a maximum burst length of 5.
+**Background:**
+AXI (Advanced eXtensible Interface) and APB (Advanced Peripheral Bus) are ARM SoC bus protocols. AXI is optimized for high bandwidth/low latency, while APB is for low cost/power designs. This bridge converts AXI write transactions to APB write transactions.
 
-Partial RTL code
-```
-`timescale 1ns/ps
+**Task:**
+Implement only the write functionality of the AXI to APB bridge, including burst writes support. Assume a maximum burst length of 5. The bridge acts as an AXI target and APB initiator.
+
+**Module Interface:**
+```verilog
 module axitoapb(
-    input clk, //positive edge triggered clock
-    input reset, //asynchronous reset
-
-    //AXI Write Addr
-    input [1:0] awaddr, //AXI write address
-    input awvalid, // AXI write address valid signal
-    output reg awready, //AXI write ready signal
-
-    //AXI Write Data
-    input [3:0] wdata, //AXI write data
-    input wvalid, // AXI write valid signal
+    input clk,           // Positive edge triggered clock
+    input reset,         // Asynchronous reset
+    
+    // AXI Write Address Channel
+    input [1:0] awaddr,  // AXI write address
+    input awvalid,       // AXI write address valid
+    output reg awready,  // AXI write ready
+    
+    // AXI Write Data Channel
+    input [3:0] wdata,   // AXI write data
+    input wvalid,        // AXI write valid
     input wlast, //AXI last write signal
-    output reg wready, //AXI write ready signal
-
-    //AXI Write Resp
-    output reg bvalid, //AXI write response valid signal
-    output reg bresp, //AXI write response
-    input bready, //AXI write response ready signal
-
-    //APB
-    output reg [1:0] paddr, //APB address
-    output reg pwrite, //APB write signal
-    output reg [3:0] pwdata, //APB write data
-    output reg psel, //APB select signal
-    input pready); //APB ready signal
-
-
-    //Insert internal signal declaration
-
-    //Insert FSM to handle protocol conversion for write transactions
-
-endmodule
-
+    output reg wready,   // AXI write ready
+    
+    // AXI Write Response Channel
+    output reg bvalid,   // AXI write response valid
+    output reg bresp,    // AXI write response
+    input bready,        // AXI write response ready
+    
+    // APB Interface
+    output reg [1:0] paddr,   // APB address
+    output reg pwrite,        // APB write signal
+    output reg [3:0] pwdata,  // APB write data
+    output reg psel,          // APB select signal
+    input pready              // APB ready signal
+);
 ```
+
+**Key Requirements:**
+1. Use VALID/READY handshake mechanism for both protocols
+2. Wait for BOTH write address and write data phases from AXI before initiating APB transaction
+3. Send address and data together on APB (APB has single phase for addr+data)
+4. Generate write response for AXI after APB completes (APB doesn't have responses)
+5. Implement proper FSM to handle protocol conversion
+
+**Specification:** See docs/Specifications.md for detailed protocol descriptions.
+
+##Hint: Since wlast signal signifies the last beat of a burst write transaction, collect all AXI write beats until wlast becomes HIGH.
+
+**File to complete:** sources/axitoapb.sv
