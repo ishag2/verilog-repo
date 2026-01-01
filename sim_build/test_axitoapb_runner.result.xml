@@ -1,6 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1767021299" />
-    <testcase name="test_1" classname="test_axitoapb_hidden" file="/Users/isha/phinity/verilog-repo/tests/test_axitoapb_hidden.py" lineno="12" time="0.0007531642913818359" sim_time_ns="130.0" ratio_time="172605.10288065844" />
-  </testsuite>
-</testsuites>
